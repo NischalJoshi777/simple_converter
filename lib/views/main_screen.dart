@@ -27,6 +27,13 @@ class _MainScreenState extends State<MainScreen> {
     'meters',
   ];
 
+  /// String to store the input value
+  String _inputValue = '';
+
+  ///Temporary  for the dropdown selections
+  String _selectedFromValue = 'miles';
+  String _selectedToValue = 'kilometers';
+
   ///String variable for from value
   String _fromValue = 'miles';
 
@@ -60,22 +67,22 @@ class _MainScreenState extends State<MainScreen> {
               const FormHeader(headerText: 'From'),
               DropdownTextField(
                 items: items,
-                selectedValue: _fromValue,
+                selectedValue: _selectedFromValue,
                 onChanged: (String? value) {
                   //rebuilds the widgets by setting the new value
                   setState(() {
-                    _fromValue = value ?? "-";
+                    _selectedFromValue = value ?? "-";
                   });
                 },
               ),
               const FormHeader(headerText: 'To'),
               DropdownTextField(
                 items: items,
-                selectedValue: _toValue,
+                selectedValue: _selectedToValue,
                 onChanged: (String? value) {
                   //rebuilds the widgets by setting the new value
                   setState(() {
-                    _toValue = value ?? "-";
+                    _selectedToValue = value ?? "-";
                   });
                 },
               ),
@@ -83,7 +90,7 @@ class _MainScreenState extends State<MainScreen> {
               ConvertButton(onPressed: _convert),
               const SizedBox(height: 20.0),
               Result(
-                value: _valueController.text,
+                value: _inputValue,
                 fromMeasure: _fromValue,
                 toMeasure: _toValue,
                 result: _result,
@@ -100,11 +107,14 @@ class _MainScreenState extends State<MainScreen> {
     try {
       double value = conversionService.convert(
         _valueController.text,
-        _fromValue,
-        _toValue,
+        _selectedFromValue,
+        _selectedToValue,
       );
       //rebuilds the widgets by setting the new value
       setState(() {
+        _inputValue = _valueController.text;
+        _fromValue = _selectedFromValue; // Update _fromValue only on conversion
+        _toValue = _selectedToValue; // Update _toValue only on conversion
         _result = value.toString();
       });
     } catch (error) {
