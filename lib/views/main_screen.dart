@@ -105,17 +105,20 @@ class _MainScreenState extends State<MainScreen> {
   ///method to handle conversion in UI
   void _convert() {
     try {
+      double parsedValue = double.tryParse(_valueController.text) ?? 0.0;
+      String formattedInputValue =
+          parsedValue.toStringAsFixed(2); // Ensure .00 at the end
       double value = conversionService.convert(
-        _valueController.text,
+        formattedInputValue,
         _selectedFromValue,
         _selectedToValue,
       );
-      //rebuilds the widgets by setting the new value
+      //rebuilds the widgets by setting the new values
       setState(() {
-        _inputValue = _valueController.text;
+        _inputValue = formattedInputValue;
         _fromValue = _selectedFromValue; // Update _fromValue only on conversion
         _toValue = _selectedToValue; // Update _toValue only on conversion
-        _result = value.toString();
+        _result = value.toStringAsFixed(2);
       });
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
